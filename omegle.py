@@ -78,7 +78,8 @@ class OmegleAPI:
                 print("Connection established!")
 
             elif e[0] == "typing":
-                print("Stranger is typing...")
+                #print("Stranger is typing...")
+                pass
 
             elif e[0] == "stoppedTyping":
                 print("Stranger stopped typing")
