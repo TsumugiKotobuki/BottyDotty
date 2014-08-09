@@ -15,7 +15,7 @@ def ping():
 
 def sendmsg(chan , msg):
 
-  ircsock.send(b"PRIVMSG "+ chan +b" :"+ msg +b"\n") 
+  ircsock.send(b"PRIVMSG "+ chan +b" :"+ msg +b"\r\n") 
 
 def sendspcmsg(chan , msg):
 
