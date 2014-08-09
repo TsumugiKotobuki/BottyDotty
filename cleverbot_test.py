@@ -1,4 +1,4 @@
-from time import sleep
+import re
 import cleverbot
 import omegle
 
@@ -11,10 +11,17 @@ class CleverbotOmegleBridge(omegle.OmegleAPI):
     def handle_message(self, message: str) -> str:
         while True:
             try:
-                return self._cleverbot.ask(message)
+                response = self._cleverbot.ask(message)
+                response = re.sub('&.+?;', '', response)
+                response = re.sub('(bot|cleverbot)',
+                                  'Shirley Bottleworth',
+                                  response,
+                                  re.IGNORECASE)
+                return response
+
             except cleverbot.CleverbotAPIRejection as ex:
                 print("Exception:", type(ex), ex)
-                sleep(1)
+                return "How does that make you feel?"
 
 
 if __name__ == '__main__':
