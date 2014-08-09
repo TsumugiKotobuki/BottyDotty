@@ -28,6 +28,8 @@ class OmegleAPI:
         if self._debug_log:
             self._config['verbose'] = self._debug_log
 
+        self._first_message = True
+
     def debug(self, msg):
         if self._debug_log:
             print("DEBUG: " + str(msg))
@@ -68,43 +70,33 @@ class OmegleAPI:
         for e in parsed:
             if e[0] == "waiting":
                 print("Waiting for a connection...")
+
             elif e[0] == "count":
                 print("There are " + str(e[1]) + " people connected to Omegle")
+
             elif e[0] == "connected":
                 print("Connection established!")
-                self.send(omegle_id, cookies, "HI I just want to talk ;_;")
+
             elif e[0] == "typing":
                 print("Stranger is typing...")
+
             elif e[0] == "stoppedTyping":
                 print("Stranger stopped typing")
+
             elif e[0] == "gotMessage":
                 print("Stranger: " + e[1])
-
+                response = self.handle_message(e[1])
                 time.sleep(random.randint(1, 5))
-                i_r = random.randint(1, 8)
-                if i_r == 1:
-                    cat = "that's cute :3"
-                elif i_r == 2:
-                    cat = "yeah, guess your right.."
-                elif i_r == 3:
-                    cat = "yeah, tell me something about yourself!!"
-                elif i_r == 4:
-                    cat = "what's up"
-                elif i_r == 5:
-                    cat = "me too"
-                else:
-                    time.sleep(random.randint(3, 9))
-                    self.send(omegle_id, cookies, "I really have to tell you something...")
-                    time.sleep(random.randint(3, 9))
-                    cat = "I love you."
-
-                self.send(omegle_id, cookies, cat)
+                self.send(omegle_id, cookies, response)
 
             elif e[0] == "strangerDisconnected":
                 print("Stranger Disconnected")
+                self._first_message = True
                 again = True
+
             elif e[0] == "suggestSpyee":
                 print("Omegle thinks you should be a spy. Fuck omegle.")
+
             elif e[0] == "recaptchaRequired":
                 print("Omegle think's you're a bot (now where would it get a silly idea like that?)."
                       " Fuckin omegle. Recaptcha code: " + e[1])
@@ -115,6 +107,13 @@ class OmegleAPI:
                 self.start()
             elif not captcha:
                 self.event(omegle_id, cookies)
+
+    # noinspection PyMethodMayBeStatic
+    def handle_message(self, message: str) -> str:
+        if self._first_message:
+            self._first_message = False
+            return "Hello! I'll be your psychologist for tonight. What's on your mind?"
+        return random.choice(["How does that make you feel?", "Go on...", "Mhm?"])
 
 
 if __name__ == '__main__':
