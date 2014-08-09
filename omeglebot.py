@@ -9,11 +9,10 @@ import urllib.parse
 import urllib.error
 import random
 import time
-
 import requests
 
 
-class OmegleAPI:
+class OmegleBot:
     server = "odo-bucket.omegle.com"
     headers = {'Referer': 'http://odo-bucket.omegle.com/', 'Connection': 'keep-alive',
                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.2 (KHTML, like Gecko)'
@@ -118,4 +117,4 @@ class OmegleAPI:
 
 
 if __name__ == '__main__':
-    OmegleAPI().start()
+    OmegleBot().start()

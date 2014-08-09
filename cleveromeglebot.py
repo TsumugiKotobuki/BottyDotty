@@ -1,9 +1,9 @@
 import re
 import cleverbot
-import omegle
+import omeglebot
 
 
-class CleverbotOmegleBridge(omegle.OmegleAPI):
+class CleverOmegleBot(omeglebot.OmegleBot):
     def __init__(self):
         super().__init__()
         self._cleverbot = cleverbot.Cleverbot()
@@ -25,4 +25,4 @@ class CleverbotOmegleBridge(omegle.OmegleAPI):
 
 
 if __name__ == '__main__':
-    CleverbotOmegleBridge().start()
+    CleverOmegleBot().start()
