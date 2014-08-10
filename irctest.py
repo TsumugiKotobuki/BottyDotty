@@ -15,11 +15,16 @@ def ping():
 
 def sendmsg(chan , msg):
 
-  ircsock.send(b"PRIVMSG "+ chan +b" :"+ msg +b"\r\n") 
+  ircsock.send(b"PRIVMSG "+ chan +b" :"+ msg +b"\n") 
+
+def sendmsg_(chan , msg):
+
+  ircsock.send(b"PRIVMSG "+ chan +b" :"+ msg +b'\r\n')
+
 
 def sendspcmsg(chan , msg):
 
-  ircsock.send(b"PRIVMSG "+ chan +b" :http://boards.4chan.org/g/thread/"+ msg +b"\n")
+  ircsock.send(b"PRIVMSG "+ chan +b" :http://boards.4chan.org/g/thread/"+ msg +b'\n')
 
 
 
@@ -34,6 +39,7 @@ def worker():
 
  # print(threading.currentThread().getName(), 'Exiting')
 
+ 
                   
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ircsock.connect((server, 6667))
@@ -44,9 +50,9 @@ ircsock.send(b"NICK "+ botnick + b"\n")
 joinchan(channel)
 
 time.sleep(10)
-#w=Thread(target=worker)
+w=Thread(target=sendmsg_,args=(channel,bytes(OmegleBot().start()).decode('utf-8')))
 
-#w.start()
+w.start()
 while 1:
 
   liste,id1=search.run()
@@ -77,4 +83,4 @@ while 1:
 
 
   if ircmsg.find(b":.chat") != -1:
-    sendmsg(channel,bytes(OmegleBot().start()))
+    sendmsg_(channel,bytes(OmegleBot().start()).decode('utf-8'))
