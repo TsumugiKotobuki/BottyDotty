@@ -1,6 +1,8 @@
 import socket,time, threading
 from search import search
 from threading import Thread
+from omeglebot import OmegleBot
+
 
 server = b"irc.freenode.net"
 channel = b"###cookies" 
@@ -59,6 +61,7 @@ while 1:
   #if ircmsg.find(b" :tox kill "+botnick) != 1:
   
    # worker()
+   
 
   if ircmsg.find(b"PING :") != -1:
 
@@ -70,4 +73,8 @@ while 1:
   
   
   if ircmsg.find(b":tox kill "+ botnick) != -1:
-                sendmsg(channel,b".insult yukarin")
+    sendmsg(channel,b".insult yukarin")
+
+
+  if ircmsg.find(b":.chat") != -1:
+    sendmsg(channel,bytes(OmegleBot().start()))
