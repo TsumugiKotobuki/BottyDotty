@@ -82,5 +82,5 @@ while 1:
     sendmsg(channel,b".insult yukarin")
 
 
-  if ircmsg.find(b":.chat") != -1:
-    sendmsg_(channel,bytes(OmegleBot().start()).decode('utf-8'))
+#  if ircmsg.find(b":.chat") != -1:
+#    sendmsg_(channel,bytes(OmegleBot().start()).decode('utf-8'))
