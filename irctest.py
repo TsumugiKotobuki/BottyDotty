@@ -4,34 +4,30 @@ from threading import Thread
 from omeglebot import OmegleBot
 
 
-server = b"irc.freenode.net"
-channel = b"#motherfucker" 
-botnick = b"HottyBotty" 
-
+server = "irc.freenode.net"
+channel = "#motherfucker" 
+channelb = b"#motherfucker"
+botnick = "HottyBotty" 
+botnickb = b"HottyBotty"
+troo = False
 
 def ping():
 
-  ircsock.send(b"PONG :pingis\n")  
+  send("PONG :pingis")  
 
-#def sendmsg(chan , msg):
 
-#  ircsock.send(b"PRIVMSG "+ chan +b" :"+ msg +b"\n") 
+def send(message:str):
+  
+  ircsock.send(message.encode() + b'\r\n')
 
-#def sendmsg_(chan , msg):
-
-#  time.sleep(30)
-#  ircsock.send(b"PRIVMSG "+ chan +b" :"+ msg +b'\r\n')
 
 def primsend(chan:str,msg:str):
 
-  ircsock.send(b"PRIVMSG %s :%s"+ b'\r\n' % (chan,msg))
+  send("PRIVMSG %s :%s" % (chan,msg))
 
-#def sendspcmsg(chan , msg):
-
-#  ircsock.send(b"PRIVMSG "+ chan +b" :http://boards.4chan.org/g/thread/"+ msg +b'\n')
 
 def joinchan(chan):
-  ircsock.send(b"JOIN "+ chan + b"\n")
+  send("JOIN "+ chan)
 
 #def worker():
 #  while True:
@@ -43,17 +39,17 @@ def joinchan(chan):
 
  
 def omegle():
-  troo = False
+  
   while True:
     if troo == True:
-      primsend(channel,OmegleBot().start().decode('utf-8'))
+      primsend(channel,OmegleBot().start()).decode('utf-8')
       troo = False
             
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ircsock.connect((server, 6667))
 
-ircsock.send(b"USER "+ botnick + b" "+ botnick + b" "+ botnick + b" :This bot is a result of a tutoral covered on http://shellium.org/wiki.\n")
-ircsock.send(b"NICK "+ botnick + b"\n")
+ircsock.send(b"USER "+ botnickb + b" "+ botnickb + b" "+ botnickb + b" :This bot is a result of a tutoral covered on http://shellium.org/wiki.\r\n")
+send("NICK "+ botnick)
 
 joinchan(channel)
 
@@ -62,14 +58,13 @@ w=Thread(target=omegle)
 
 w.start()
 while 1:
-  global troo
-
+  
   liste,id1=search.run()
   listes=liste+id1
 
 
-  ircmsg = ircsock.recv(2048)
-  ircmsg = ircmsg.strip(b'\r\n')
+  ircmsg = ircsock.recv(2048).strip().decode()
+  ircmsg = ircmsg.strip('\r\n')
   print(ircmsg)
 
 
@@ -78,7 +73,7 @@ while 1:
    # worker()
    
 
-  if ircmsg.find(b"PING :") != -1:
+  if ircmsg.find("PING :") != -1:
 
     ping()
 
@@ -87,7 +82,7 @@ while 1:
  #   sendspcmsg(channel,bytes(listes[1].encode('utf-8')))
   
   
-  if ircmsg.find(b":tox kill ") != -1:
+  if ircmsg.find(":tox kill") != -1:
     troo = True
     primsend(channel,"changed.")
 
