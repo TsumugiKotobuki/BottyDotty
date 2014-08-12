@@ -17,7 +17,8 @@ def ping():
 
 
 def send(message:str):
-  
+
+  print("sending to server:", message)
   ircsock.send(message.encode() + b'\r\n')
 
 
@@ -44,6 +45,9 @@ def omegle():
     if troo == True:
       primsend(channel,OmegleBot().start()).decode('utf-8')
       troo = False
+    else:
+      time.sleep(2)
+      print("troo!=True")
             
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ircsock.connect((server, 6667))
@@ -54,9 +58,9 @@ send("NICK "+ botnick)
 joinchan(channel)
 
 time.sleep(10)
-w=Thread(target=omegle)
+#w=Thread(target=omegle)
 
-w.start()
+#w.start()
 while 1:
   
   liste,id1=search.run()
@@ -87,5 +91,5 @@ while 1:
     primsend(channel,"changed.")
 
 
-#  if ircmsg.find(b":.chat") != -1:
-#    sendmsg_(channel,bytes(OmegleBot().start()).decode('utf-8'))
+  if ircmsg.find(":.chat") != -1:
+    send(channel,OmegleBot().start()).decode('utf-8')
