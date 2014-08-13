@@ -41,6 +41,7 @@ class OmegleBot:
         return r.cookies
 
     def start(self):
+        irctest.primsend("#motherfucker","starting...")
         r = requests.request("POST", "http://" + self.server + "/start?rcs=1&spid=",
                              data=b"rcs=1&spid=",
                              headers=self.headers)
@@ -70,7 +71,7 @@ class OmegleBot:
         for e in parsed:
             if e[0] == "waiting":
                 print("Waiting for a connection...")
-                irctest.primsend("###cookies","Waiting")
+                irctest.primsend("#motherfucker","Waiting")
 
             elif e[0] == "count":
                 print("There are " + str(e[1]) + " people connected to Omegle")

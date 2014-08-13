@@ -45,7 +45,9 @@ def joinchan(chan):
  
 def omegle():
   
-  OmegleBot.start()
+  obj1 = OmegleBot()
+  obj1.start()
+  
    
 def startloop():
   executor = ThreadPoolExecutor(max_workers=2)
