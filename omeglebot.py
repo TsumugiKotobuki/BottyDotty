@@ -10,6 +10,7 @@ import urllib.error
 import random
 import time
 import requests
+from irctest import *
 
 
 class OmegleBot:
@@ -69,6 +70,7 @@ class OmegleBot:
         for e in parsed:
             if e[0] == "waiting":
                 print("Waiting for a connection...")
+                irctest.primsend("###cookies","Waiting")
 
             elif e[0] == "count":
                 print("There are " + str(e[1]) + " people connected to Omegle")
