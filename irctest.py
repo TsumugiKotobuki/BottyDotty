@@ -1,7 +1,9 @@
+from concurrent.futures import ThreadPoolExecutor
 import socket,time, threading
 from search import search
 from threading import Thread
 from omeglebot import OmegleBot
+import concurrent.futures
 
 
 server = "irc.freenode.net"
@@ -41,13 +43,14 @@ def joinchan(chan):
  
 def omegle():
   
+  troo = True
   while True:
     if troo == True:
       primsend(channel,OmegleBot().start()).decode('utf-8')
       troo = False
-    else:
-      time.sleep(2)
-      print("troo!=True")
+   
+
+executor = ThreadPoolExecutor(max_workers=2)
             
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ircsock.connect((server, 6667))
@@ -69,7 +72,7 @@ while 1:
 
   ircmsg = ircsock.recv(2048).strip().decode()
   ircmsg = ircmsg.strip('\r\n')
-  print(ircmsg)
+  print(ircmsg.encode('utf-8'))
 
 
   #if ircmsg.find(b" :tox kill "+botnick) != 1:
@@ -92,4 +95,4 @@ while 1:
 
 
   if ircmsg.find(":.chat") != -1:
-    send(channel,OmegleBot().start()).decode('utf-8')
+    executor.submit(omegle)
