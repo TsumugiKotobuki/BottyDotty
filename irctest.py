@@ -45,8 +45,7 @@ def joinchan(chan):
  
 def omegle():
   
-  obj1 = OmegleBot()
-  obj1.start()
+  OmegleBot.start()
   
    
 def startloop():
