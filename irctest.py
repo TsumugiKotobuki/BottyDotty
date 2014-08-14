@@ -2,18 +2,19 @@ from concurrent.futures import ThreadPoolExecutor
 import socket,time, threading
 from search import search
 from threading import Thread
-import omeglebot
+from omeglebot import OmegleBot
 import concurrent.futures
 
 
 server = "irc.freenode.net"
-channel = "#motherfucker" 
+channel = "###cookies" 
 channelb = b"#motherfucker"
 botnick = "HottyBotty" 
 botnickb = b"HottyBotty"
 troo = False
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 
 def ping():
 
@@ -34,23 +35,23 @@ def primsend(chan:str,msg:str):
 def joinchan(chan):
   send("JOIN "+ chan)
 
-#def worker():
-#  while True:
-#    time.sleep(82800)
-#    ircsock.send(b"PRIVMSG" +chan +b"Time to show your desktops to the NASA!11!!"+b"\n")
-#    ircsock.send(b"PRIVMSG "+ chan +b" :http://boards.4chan.org/g/thread/"+ bytes(listes[1].encode('utf-8') + b"\n"))
+omeg1 = OmegleBot(primsend)
+
+
+def worker():
+  omeg1.start()
 
  # print(threading.currentThread().getName(), 'Exiting')
 
  
-def omegle():
+#def omegle():
   
-  OmegleBot.start()
+#  omeglebot.start()
   
-   
+#t = threading.Thread(target=omegle)   
+
+
 def startloop():
-  executor = ThreadPoolExecutor(max_workers=2)
-            
 
   ircsock.connect((server, 6667))
 
@@ -60,7 +61,7 @@ def startloop():
   joinchan(channel)
 
   time.sleep(10)
-#w=Thread(target=omegle)
+  w=Thread(target=worker)
 
 #w.start()
 
@@ -95,6 +96,6 @@ def startloop():
 
 
     if ircmsg.find(":.chat") != -1:
-      executor.submit(omegle)
+      w.start()
 
 startloop()

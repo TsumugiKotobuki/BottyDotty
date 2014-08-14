@@ -10,7 +10,6 @@ import urllib.error
 import random
 import time
 import requests
-from irctest import *
 
 
 class OmegleBot:
@@ -22,7 +21,8 @@ class OmegleBot:
                'Accept-Encoding': 'gzip,deflate,sdch', 'Accept-Language': 'en-US',
                'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3'}
 
-    def __init__(self):
+    def __init__(self,ircfunc):
+        self._ircfunc = ircfunc
         self._config = {'verbose': open("/dev/null", "w+")}
         self._debug_log = open("debug.log", "a+")
         if self._debug_log:
@@ -41,7 +41,7 @@ class OmegleBot:
         return r.cookies
 
     def start(self):
-        irctest.primsend("#motherfucker","starting...")
+        self._ircfunc("###cookies","starting...")
         r = requests.request("POST", "http://" + self.server + "/start?rcs=1&spid=",
                              data=b"rcs=1&spid=",
                              headers=self.headers)
@@ -71,29 +71,31 @@ class OmegleBot:
         for e in parsed:
             if e[0] == "waiting":
                 print("Waiting for a connection...")
-                irctest.primsend("#motherfucker","Waiting")
-
+                self._ircfunc("###cookies","waiting...")
             elif e[0] == "count":
                 print("There are " + str(e[1]) + " people connected to Omegle")
-
+                
             elif e[0] == "connected":
                 print("Connection established!")
-
+                self._ircfunc("###cookies","connected")
             elif e[0] == "typing":
-                #print("Stranger is typing...")
-                pass
+                print("Stranger is typing...")
+                self._ircfunc("###cookies","stranger is typing")
 
             elif e[0] == "stoppedTyping":
                 print("Stranger stopped typing")
 
             elif e[0] == "gotMessage":
                 print("Stranger: " + e[1])
+                self._ircfunc("###cookies","Stranger: "+e[1])
                 response = self.handle_message(e[1])
                 time.sleep(random.randint(1, 5))
                 self.send(omegle_id, cookies, response)
+                self._ircfunc("###cookies","You:"+response)
 
             elif e[0] == "strangerDisconnected":
                 print("Stranger Disconnected")
+                self._ircfunc("###cookies","stranger disconnected")
                 self._first_message = True
                 again = True
 
@@ -103,10 +105,12 @@ class OmegleBot:
             elif e[0] == "recaptchaRequired":
                 print("Omegle think's you're a bot (now where would it get a silly idea like that?)."
                       " Fuckin omegle. Recaptcha code: " + e[1])
+                self._ircfunc("###cookies","Captcha")
                 captcha = True
 
             if again:
                 print("Reconnecting...")
+                self._ircfunc("###cookies","Reconnecting...")
                 self.start()
             elif not captcha:
                 self.event(omegle_id, cookies)
@@ -119,5 +123,4 @@ class OmegleBot:
         return random.choice(["How does that make you feel?", "Go on...", "Mhm?"])
 
 
-if __name__ == '__main__':
-    OmegleBot().start()
+
